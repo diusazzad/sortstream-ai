@@ -1,7 +1,8 @@
 from typing import List, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from .config import settings
@@ -11,6 +12,7 @@ from .schemas.waste_event import (
     MaterialCategory,
     WasteDetectionEvent,
 )
+from .services.stream_manager import ConveyorStreamManager
 from .services.warm_calculator import EPA_WARM_V16_FACTORS, EpawarmAccountingEngine
 
 app = FastAPI(
@@ -28,6 +30,7 @@ app.add_middleware(
 )
 
 warm_engine = EpawarmAccountingEngine()
+stream_manager = ConveyorStreamManager()
 
 
 class QuickEstimateRequest(BaseModel):
@@ -42,8 +45,13 @@ def health_check():
         "status": "healthy",
         "service": settings.app_name,
         "version": settings.app_version,
-        "engine": "EPA WARM v16",
+        "engine": "EPA WARM v16 & ByteTrack CV",
     }
+
+
+# ==========================================
+# EPA WARM v16 Carbon & Lifecycle Endpoints
+# ==========================================
 
 
 @app.get("/api/warm/factors")
@@ -102,3 +110,37 @@ def compute_telemetry(batch: BatchEventsRequest):
         events=batch.events,
         elapsed_seconds=batch.elapsed_seconds,
     )
+
+
+# ==========================================
+# Real-Time Conveyor Stream & Vision Feeds
+# ==========================================
+
+
+@app.get("/api/stream/feed")
+def get_video_stream():
+    """Multipart MJPEG video feed for live React dashboard streaming."""
+    return StreamingResponse(
+        stream_manager.generate_mjpeg_stream(fps=20),
+        media_type="multipart/x-mixed-replace; boundary=frame",
+    )
+
+
+@app.get("/api/stream/snapshot")
+def get_snapshot():
+    """Returns a single annotated JPEG snapshot of the conveyor belt."""
+    jpeg_bytes = stream_manager.process_next_frame()
+    return Response(content=jpeg_bytes, media_type="image/jpeg")
+
+
+@app.get("/api/stream/telemetry", response_model=ConveyorTelemetry)
+def get_stream_telemetry():
+    """Returns real-time aggregated metrics from the active conveyor line."""
+    return stream_manager.get_current_telemetry()
+
+
+@app.post("/api/stream/reset")
+def reset_stream():
+    """Resets stream metrics and tracking counters."""
+    stream_manager.reset()
+    return {"status": "reset", "session_id": stream_manager.session_id}
