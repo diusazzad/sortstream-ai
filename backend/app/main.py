@@ -119,9 +119,9 @@ def compute_telemetry(batch: BatchEventsRequest):
 
 @app.get("/api/stream/feed")
 def get_video_stream():
-    """Multipart MJPEG video feed for live React dashboard streaming."""
+    """Multipart MJPEG video feed for live React dashboard streaming with bandwidth-optimized payload."""
     return StreamingResponse(
-        stream_manager.generate_mjpeg_stream(fps=20),
+        stream_manager.generate_mjpeg_stream(fps=15, quality=65),
         media_type="multipart/x-mixed-replace; boundary=frame",
     )
 
@@ -129,7 +129,7 @@ def get_video_stream():
 @app.get("/api/stream/snapshot")
 def get_snapshot():
     """Returns a single annotated JPEG snapshot of the conveyor belt."""
-    jpeg_bytes = stream_manager.process_next_frame()
+    jpeg_bytes = stream_manager.process_next_frame(quality=80)
     return Response(content=jpeg_bytes, media_type="image/jpeg")
 
 

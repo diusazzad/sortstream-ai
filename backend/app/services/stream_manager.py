@@ -38,10 +38,10 @@ class ConveyorStreamManager:
         self.recorded_events.clear()
         self.start_time = time.time()
 
-    def process_next_frame(self) -> bytes:
+    def process_next_frame(self, quality: int = 65) -> bytes:
         """
         Advances one frame, performs tracking, updates EPA WARM accounting,
-        and renders HUD annotations.
+        and renders HUD annotations with optimized JPEG payload compression.
         """
         raw_img, detections = self.generator.step()
 
@@ -68,7 +68,7 @@ class ConveyorStreamManager:
             items_total=current_telemetry.items_total,
         )
 
-        jpeg_bytes = self.detector.encode_jpeg(annotated_img, quality=80)
+        jpeg_bytes = self.detector.encode_jpeg(annotated_img, quality=quality)
         self._latest_jpeg = jpeg_bytes
         return jpeg_bytes
 
@@ -84,14 +84,14 @@ class ConveyorStreamManager:
     def get_latest_frame(self) -> bytes:
         """Returns the most recent annotated JPEG frame."""
         if self._latest_jpeg is None:
-            return self.process_next_frame()
+            return self.process_next_frame(quality=75)
         return self._latest_jpeg
 
-    async def generate_mjpeg_stream(self, fps: int = 24):
-        """Yields continuous multipart MJPEG stream for live web video display."""
-        delay = 1.0 / fps
+    async def generate_mjpeg_stream(self, fps: int = 15, quality: int = 65):
+        """Yields continuous multipart MJPEG stream with bandwidth-optimized payload."""
+        delay = 1.0 / max(fps, 1)
         while self.is_running:
-            frame_bytes = self.process_next_frame()
+            frame_bytes = self.process_next_frame(quality=quality)
             yield (
                 b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + frame_bytes + b"\r\n"
             )

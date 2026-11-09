@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from './components/Navbar';
-import TelemetryCards from './components/TelemetryCards';
-import VideoFeed from './components/VideoFeed';
-import MaterialBreakdown from './components/MaterialBreakdown';
-import WarmCalculatorModal from './components/WarmCalculatorModal';
-import { Shield, Sparkles, Terminal, BookOpen, ExternalLink, Activity } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import Navbar from "./components/Navbar";
+import TelemetryCards from "./components/TelemetryCards";
+import VideoFeed from "./components/VideoFeed";
+import MaterialBreakdown from "./components/MaterialBreakdown";
+import WarmCalculatorModal from "./components/WarmCalculatorModal";
+import {
+  Shield,
+  Sparkles,
+  Terminal,
+  BookOpen,
+  ExternalLink,
+  Activity,
+} from "lucide-react";
 
 export default function App() {
   const [telemetry, setTelemetry] = useState(null);
@@ -13,7 +20,7 @@ export default function App() {
 
   const fetchTelemetry = async () => {
     try {
-      const res = await fetch('/api/stream/telemetry');
+      const res = await fetch("/api/stream/telemetry");
       if (res.ok) {
         const data = await res.json();
         setTelemetry(data);
@@ -34,7 +41,7 @@ export default function App() {
 
   const handleReset = async () => {
     try {
-      await fetch('/api/stream/reset', { method: 'POST' });
+      await fetch("/api/stream/reset", { method: "POST" });
       await fetchTelemetry();
     } catch (err) {
       console.error("Failed to reset stream:", err);
@@ -69,11 +76,12 @@ export default function App() {
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <h2 className="text-sm font-bold text-white flex items-center gap-2">
                 Arbiter Hacks V1 • Theme Track: Rethinking Waste
-              </h3>
-              <p className="text-xs text-zinc-400 mt-0.5">
-                SortStream AI directly addresses MRF conveyor contamination and quantifies life-cycle carbon reductions using EPA WARM v16.
+              </h2>
+              <p className="text-xs text-zinc-300 mt-0.5">
+                SortStream AI directly addresses MRF conveyor contamination and
+                quantifies life-cycle carbon reductions using EPA WARM v16.
               </p>
             </div>
           </div>
@@ -83,15 +91,16 @@ export default function App() {
               href="https://github.com/diusazzad/sortstream-ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-xs text-zinc-300 border border-zinc-700 transition-colors"
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-xs text-zinc-200 border border-zinc-700 transition-colors"
             >
               <span>GitHub Repository</span>
-              <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
+              <ExternalLink className="w-3.5 h-3.5 text-zinc-300" />
             </a>
 
             <button
               onClick={() => setIsCalculatorOpen(true)}
-              className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white shadow-lg shadow-emerald-500/20 transition-colors"
+              aria-label="Launch Interactive EPA WARM Calculator"
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-xs font-bold text-zinc-950 shadow-lg shadow-emerald-500/25 transition-colors focus:ring-2 focus:ring-emerald-400"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Launch Calculator</span>
@@ -100,9 +109,10 @@ export default function App() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-900 bg-[#07080c] py-4 text-center text-xs text-zinc-500 font-mono-code">
-        SortStream AI • Industrial Conveyor Sorting & EPA WARM v16 Accounting Engine • Arbiter Hacks V1
+      {/* Accessible Footer with High Contrast */}
+      <footer className="border-t border-zinc-900 bg-[#07080c] py-4 text-center text-xs text-zinc-300 font-mono-code">
+        SortStream AI • Industrial Conveyor Sorting & EPA WARM v16 Accounting
+        Engine • Arbiter Hacks V1
       </footer>
 
       {/* Interactive Modal */}
