@@ -1,5 +1,5 @@
-import React from 'react';
-import { Layers, Zap, Leaf, CheckCircle2, TrendingUp } from 'lucide-react';
+import React from "react";
+import { Layers, Zap, Leaf, CheckCircle2, TrendingUp } from "lucide-react";
 
 export default function TelemetryCards({ telemetry }) {
   const totalItems = telemetry?.items_total ?? 0;
@@ -18,23 +18,27 @@ export default function TelemetryCards({ telemetry }) {
         </div>
         <div className="flex items-center justify-between text-xs font-semibold text-emerald-400 font-mono-code mb-2">
           <span>NET AVOIDED GHG</span>
-          <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/30">EPA WARM v16</span>
+          <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/30">
+            EPA WARM v16
+          </span>
         </div>
         <div className="flex items-baseline space-x-2">
           <span className="text-3xl font-extrabold text-white tracking-tight font-mono-code">
             {avoidedCo2eKg.toFixed(4)}
           </span>
-          <span className="text-sm font-semibold text-emerald-300">kg CO₂e</span>
+          <span className="text-sm font-semibold text-emerald-300">
+            kg CO₂e
+          </span>
         </div>
-        <div className="mt-2 text-xs text-zinc-400 flex items-center justify-between pt-2 border-t border-zinc-800/80">
+        <div className="mt-2 text-xs text-zinc-300 flex items-center justify-between pt-2 border-t border-zinc-800/80">
           <span>Metric Tons: {(avoidedCo2eKg / 1000).toFixed(6)} MT</span>
-          <span className="text-emerald-400/90 font-medium">100% Verified</span>
+          <span className="text-emerald-400 font-medium">100% Verified</span>
         </div>
       </div>
 
       {/* 2. Total Count & Conveyor Speed */}
       <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 shadow-lg relative overflow-hidden">
-        <div className="flex items-center justify-between text-xs font-semibold text-zinc-400 font-mono-code mb-2">
+        <div className="flex items-center justify-between text-xs font-semibold text-zinc-300 font-mono-code mb-2">
           <span>SORTED UNITS</span>
           <div className="flex items-center space-x-1 text-sky-400">
             <TrendingUp className="w-3.5 h-3.5" />
@@ -45,9 +49,9 @@ export default function TelemetryCards({ telemetry }) {
           <span className="text-3xl font-extrabold text-white tracking-tight font-mono-code">
             {totalItems}
           </span>
-          <span className="text-sm font-semibold text-zinc-400">items</span>
+          <span className="text-sm font-semibold text-zinc-300">items</span>
         </div>
-        <div className="mt-2 text-xs text-zinc-400 flex items-center justify-between pt-2 border-t border-zinc-800/80">
+        <div className="mt-2 text-xs text-zinc-300 flex items-center justify-between pt-2 border-t border-zinc-800/80">
           <span>Mass Diverted: {totalMassKg.toFixed(3)} kg</span>
           <span className="text-sky-400 font-mono-code">ByteTrack ID</span>
         </div>
@@ -65,9 +69,9 @@ export default function TelemetryCards({ telemetry }) {
           </span>
           <span className="text-sm font-semibold text-amber-300">kWh</span>
         </div>
-        <div className="mt-2 text-xs text-zinc-400 flex items-center justify-between pt-2 border-t border-zinc-800/80">
+        <div className="mt-2 text-xs text-zinc-300 flex items-center justify-between pt-2 border-t border-zinc-800/80">
           <span>Thermal: {(energyKwh * 3412.142).toFixed(0)} BTU</span>
-          <span className="text-amber-400/90 font-mono-code">Life-Cycle Net</span>
+          <span className="text-amber-400 font-mono-code">Life-Cycle Net</span>
         </div>
       </div>
 
@@ -83,9 +87,12 @@ export default function TelemetryCards({ telemetry }) {
           </span>
           <span className="text-sm font-semibold text-teal-300">purity</span>
         </div>
-        <div className="mt-2 text-xs text-zinc-400 flex items-center justify-between pt-2 border-t border-zinc-800/80">
-          <span>Landfill Saved: {(telemetry?.landfill_volume_diverted_m3 ?? 0).toFixed(4)} m³</span>
-          <span className="text-teal-400/90 font-medium">Industrial MRF</span>
+        <div className="mt-2 text-xs text-zinc-300 flex items-center justify-between pt-2 border-t border-zinc-800/80">
+          <span>
+            Landfill Saved:{" "}
+            {(telemetry?.landfill_volume_diverted_m3 ?? 0).toFixed(4)} m³
+          </span>
+          <span className="text-teal-400 font-medium">Industrial MRF</span>
         </div>
       </div>
     </div>
